@@ -6,17 +6,66 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.DatePicker;
+
+import java.util.Calendar;
+import java.util.Date;
 
 public class DatePickerFragment extends DialogFragment {
 
+    private static final String TAG = "wgj_DatePickerFragment";
+    private static final String ARG_DATE = "date";
+    private DatePicker mDatePicker;
+
+    public static DatePickerFragment newInstance(Date date) {
+        Bundle args = new Bundle();
+        args.putSerializable(ARG_DATE, date);
+        DatePickerFragment fragment = new DatePickerFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+//    @Nullable
+//    @Override
+//    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+//        Log.d(TAG, "onCreateView");
+//        return inflater.inflate(R.layout.dialog_date, container, false);
+//    }
+//
+//    @Override
+//    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+//        Log.d(TAG, "onViewCreated");
+//        mDatePicker = view.findViewById(R.id.dialog_date_picker);
+//        Date date = (Date) getArguments().get(ARG_DATE);
+//        Calendar calendar = Calendar.getInstance();
+//        calendar.setTime(date);
+//        int year = calendar.get(Calendar.YEAR);
+//        int month = calendar.get(Calendar.MONTH -1) -1;
+//        int day = calendar.get(Calendar.DAY_OF_MONTH);
+//        mDatePicker.init(year, month, day, null);
+//    }
 
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
+        Log.d(TAG, "onCreateDilaog");
+        View v = LayoutInflater.from(getActivity()).inflate(R.layout.dialog_date, null);
+        mDatePicker = v.findViewById(R.id.dialog_date_picker);
+        Date date = (Date) getArguments().get(ARG_DATE);
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH) -1;
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+        Log.d(TAG, " year = " + year + " month = " + month +" day = " + day);
+        mDatePicker.init(year, month, day, null);
         return new AlertDialog.Builder(getActivity())
                 .setTitle(R.string.date_picker_title)
                 .setPositiveButton(android.R.string.ok, null)
-                .setView(R.layout.dialog_date)
+                .setView(v)
                 .create();
     }
 }
