@@ -1,6 +1,8 @@
 package com.example.criminalintent;
 
 import android.content.Context;
+import android.database.MatrixCursor;
+import android.database.sqlite.SQLiteDatabase;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -10,16 +12,16 @@ import java.util.UUID;
 public class CrimeLab {
     private static CrimeLab sCrimeLab;
     private List<Crime> mCrimes;
+    private Context mContext;
+    private SQLiteDatabase mDateBase;
 
     private CrimeLab(Context context){
+        mContext = context.getApplicationContext();
+        mDateBase = new CrimeBaseHelper(mContext).getWritableDatabase();
+
         mCrimes = new ArrayList<>();
-        for (int i = 0; i < 100; i++){
-            Crime crime = new Crime();
-            crime.setTilte("Crime  " + i);
-            crime.setDate(new Date());
-            crime.setSolved(i % 2 == 0);
-            mCrimes.add(crime);
-        }
+
+
 
     }
 
@@ -41,5 +43,9 @@ public class CrimeLab {
             }
         }
         return null;
+    }
+
+    public void addCrime(Crime c){
+        mCrimes.add(c);
     }
 }
